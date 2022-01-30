@@ -1,7 +1,9 @@
 import os
 import re
 import shutil
-sort_folder = ("C:\\Users\\kuzik\\Desktop\\Хлам")
+import sys
+
+sort_folder = input (sys.argv[1])
 
 files = {"audio": ["mp3", "ogg", "wav", "amr"],
          "video": ["mp4", "avi", "mov", "mkv", "MOV"],
@@ -46,18 +48,18 @@ def move(path):      # Перемещение файлов в папки по н
             if sufix in sort_file[value][1]:
                 print(f'Moving {el} in {sort_file[value][0]} folder\n')
                 new_el = (normalize("".join(file_name)) + "." + sufix)
-                os.rename(
-                    el, f'{sort_folder}\\{sort_file[value][0]}\\{new_el}')
+                os.rename(el, f'{sort_folder}\\{sort_file[value][0]}\\' + new_el)
             elif sufix  not in sort_file[value][1]:
                 continue
 
 
 def folder_sort(path):  # Рекурсивный проход по папкам
     for folderName, subfolders, filenames in os.walk(path):
-        if folderName != dict_keys:
+        x = len(path)
+        if ("".join(folderName.split("\\")[x: x+1]) in dict_keys) == False:
             move(os.chdir(folderName))
         for subfolder in subfolders:
-            if folderName != dict_keys:
+            if ((subfolder in dict_keys) == False):
                 move(os.chdir(subfolder))
             for filename in filenames:
                 if folderName != dict_keys:
@@ -66,10 +68,11 @@ def folder_sort(path):  # Рекурсивный проход по папкам
 
 folder_sort(sort_folder)
 x = str ("\\")
-print (dict_keys)
+
 def remove_empty_dirs(path):  # Удаление пустых директорий
     for folderName, subfolders, filenames in os.walk(path):
-        if (os.path.isdir(folderName) == True) and (os.listdir(folderName) == []) and ((folderName in dict_keys) == False):
+        x = len(path.split("\\"))
+        if (os.path.isdir(folderName) == True) and (os.listdir(folderName) == []) and (("".join(folderName.split("\\")[x: x+1]) in dict_keys) == False):
             os.rmdir(folderName)
         for subfolder in subfolders:
             if (os.path.isdir(subfolder) == True) and (os.listdir(subfolder) == []) and ((folderName in dict_keys) == False):
@@ -89,4 +92,3 @@ def unpackArchive (path):
             shutil.unpack_archive (f'{path}\\archives\\{el}', f'{path}\\archives\\{file_name}\\{el}')
 
 unpackArchive (sort_folder)
-print (dict_keys)
